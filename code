@@ -1,0 +1,38 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+
+nokta_sayisi = 1000
+x_degeri = np.random.randint(0, 1001, nokta_sayisi)
+y_degeri = np.random.randint(0, 1001, nokta_sayisi)
+
+data = pd.DataFrame({'X': x_degeri, 'Y': y_degeri})
+
+data.to_excel('coordinates.xlsx', index=False)
+
+data = pd.read_excel('coordinates.xlsx')
+
+x_degeri = data['X']
+y_degeri = data['Y']
+
+izgara_boyutu = 100
+
+colors = list(mcolors.TABLEAU_COLORS.values())
+
+plt.figure(figsize=(10, 10))
+
+for i in range(0, 1000, izgara_boyutu):
+    for j in range(0, 1000, izgara_boyutu):
+        mask = (x_degeri >= i) & (x_degeri < i + izgara_boyutu) & (y_degeri >= j) & (y_degeri < j + izgara_boyutu)
+        plt.scatter(x_degeri[mask], y_degeri[mask], s=10, color=colors[(i//izgara_boyutu + j//izgara_boyutu) % len(colors)])
+
+for i in range(0, 1001, izgara_boyutu):
+    plt.axvline(x=i, color='black', linewidth=0.5)
+    plt.axhline(y=i, color='black', linewidth=0.5)
+
+plt.xlabel('X Koordinatları')
+plt.ylabel('Y Koordinatları')
+plt.title(f'Rastgele Koordinatların {izgara_boyutu}x{izgara_boyutu} Izgarada Gösterimi')
+plt.grid(True)
+plt.show()
